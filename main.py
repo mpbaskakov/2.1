@@ -1,22 +1,4 @@
-with open('recipe.txt', encoding='utf8') as f:
-    cook_book = {}
-    list_of_ingridients = []
-    dict_of_ingridients = {}
-    for line in f:
-        dish = line.strip()
-        num_of_ingridients = int(f.readline().strip())
-        for i in range(num_of_ingridients):
-            ingridients = f.readline().strip()
-            ingridients = ingridients.split(' | ')
-            dict_of_ingridients['ingridient_name'] = ingridients[0]
-            dict_of_ingridients['quantity'] = int(ingridients[1])
-            dict_of_ingridients['measure'] = ingridients[2]
-            list_of_ingridients.append(dict_of_ingridients)
-            dict_of_ingridients = {}
-        cook_book[dish] = list_of_ingridients
-        list_of_ingridients = []
-
-def get_shop_list_by_dishes(dishes, person_count):
+def get_shop_list_by_dishes(dishes, person_count, cook_book):
     shop_list = {}
     for dish in dishes:
         for ingridient in cook_book[dish]:
@@ -37,7 +19,22 @@ def create_shop_list():
     person_count = int(input('Введите количество человек: '))
     dishes = input('Введите блюда в расчете на одного человека (через запятую): ') \
         .lower().split(', ')
-    shop_list = get_shop_list_by_dishes(dishes, person_count)
+    cook_book = {}
+    with open('recipe.txt', encoding='utf8') as f:
+        for line in f:
+            dish = line.strip()
+            num_of_ingridients = int(f.readline().strip())
+            list_of_ingridients = []
+            for i in range(num_of_ingridients):
+                dict_of_ingridients = {}
+                ingridients = f.readline().strip()
+                ingridients = ingridients.split(' | ')
+                dict_of_ingridients['ingridient_name'] = ingridients[0]
+                dict_of_ingridients['quantity'] = int(ingridients[1])
+                dict_of_ingridients['measure'] = ingridients[2]
+                list_of_ingridients.append(dict_of_ingridients)
+            cook_book[dish] = list_of_ingridients
+    shop_list = get_shop_list_by_dishes(dishes, person_count, cook_book)
     print_shop_list(shop_list)
 
 create_shop_list()
